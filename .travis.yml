@@ -1,0 +1,12 @@
+language: node_js
+node_js:
+  - "4.3.1"
+  - "0.10"
+script: make test-coverage
+# after_success:
+#   - 'cat ./coverage/lcov.info | ./node_modules/.bin/coveralls'
+after_success:
+  - './node_modules/.bin/codeclimate-test-reporter < ./coverage/lcov.info'
+addons:
+  code_climate:
+    repo_token: 58471214b47efc3faf112590a0ed46ede5e2523a21871385c34ae3327129748d
