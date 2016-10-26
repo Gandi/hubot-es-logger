@@ -14,19 +14,17 @@ module.exports = (robot) ->
 
   if eslogger.logEnabled? and eslogger.logEnabled isnt "false"
     robot.hear /.*/, (msg) ->
-      log = {}
-      log.nick = msg.message.user.name
-      log.message = msg.message.text
-      log.room = msg.message.room
-      # console.log log
+      log =
+        room: msg.message.room
+        nick: msg.message.user.name
+        message: msg.message.text
       eslogger.logMessageES log, msg.message.room, msg
 
     logMessageFromRobot = (room, text) ->
-      log = {}
-      log.nick = robot.name
-      log.message = text
-      log.room = room
-      # console.log log
+      log =
+        room = room
+        nick = robot.name
+        message = text
       eslogger.logMessageES log, room, robot
 
     robot.logMessageFromRobot = logMessageFromRobot

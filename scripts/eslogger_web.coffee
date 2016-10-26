@@ -15,6 +15,14 @@ module.exports = (robot) ->
   robot.eslogger ?= new ESLogger(robot)
   eslogger = robot.eslogger
 
+  robot.router.get "/#{robot.name}/logs", (req, res) ->
+    content = eslogger.html_head("<a href=\"/#{robot.name}/logs\">Irc Logs</a>")
+    for room in eslogger.logRooms.sort()
+      content += "<p><span></span><a href=\"/#{robot.name}/logs/#{room.slice(1)}\">#{room}</a></p>"
+    content += eslogger.foot_html()
+    res.setHeader 'content-type', 'text/html'
+    res.end content
+
   robot.router.get "/#{robot.name}/logs/:room", (req, res) ->
     room = req.params.room
     if room && "#" + room in logRooms
@@ -28,13 +36,4 @@ module.exports = (robot) ->
     else
       res.setHeader 'content-type', 'text/plain'
       res.status(404).end "Unkown room."
-
-
-  robot.router.get "/#{robot.name}/logs", (req, res) ->
-    content = eslogger.html_head("<a href=\"/#{robot.name}/logs\">Irc Logs</a>")
-    for room in eslogger.logRooms.sort()
-      content += "<p><span></span><a href=\"/#{robot.name}/logs/#{room.slice(1)}\">#{room}</a></p>"
-    content += eslogger.foot_html()
-    res.setHeader 'content-type', 'text/html'
-    res.end content
 
