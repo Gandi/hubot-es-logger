@@ -4,13 +4,18 @@
 # Author:
 #   mose
 
+ESLogger = require '../lib/eslogger'
+
 module.exports = (robot) ->
 
-  if logAnnounce? and logAnnounce isnt "false"
+  robot.eslogger ?= new ESLogger(robot)
+  eslogger = robot.eslogger
+
+  if eslogger.logAnnounce? and eslogger.logAnnounce isnt "false"
     robot.enter (msg) ->
-      if !missingEnvironmentForApi(msg)
+      unless eslogger.missingEnvironmentForApi(msg)
         room = msg.message.user.room
-        if room in logRooms
+        if room in eslogger.logRooms
           if msg.message.user.name != robot.name
             delete msg.message.user.room
-            msg.send "Check the logs on #{getLogURL(room)}"
+            msg.send "Check the logs on #{eslogger.getLogURL(room)}"
