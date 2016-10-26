@@ -12,20 +12,14 @@ class ESLogger
 
   missingEnvironmentForApi: (msg) ->
     missingAnything = false
-    unless logESUrl?
+    unless @logESUrl?
       msg.send "Ensure that GANDI_LOG_ES_URL is set."
       missingAnything |= true
-    unless logRooms?
+    unless @logRooms?
       msg.send "Ensure that GANDI_LOG_ROOMS is set."
       missingAnything |= true
-    unless logIndexName?
+    unless @logIndexName?
       msg.send "Ensure that GANDI_LOG_INDEX_NAME is set."
-      missingAnything |= true
-    unless logKibanaUrlName?
-      msg.send "Ensure that GANDI_LOG_KIBANA_URL is set."
-      missingAnything |= true
-    unless logKibanaTemplateName?
-      msg.send "Ensure that GANDI_LOG_KIBANA_TEMPLATE is set."
       missingAnything |= true
     missingAnything
 
@@ -34,21 +28,21 @@ class ESLogger
     process.env.HUBOT_BASE_URL + path.join(robot.name, 'logs', room.slice(1))
 
   logMessageES: (log, room, msg) ->
-    if !missingEnvironmentForApi(msg)
-      if room in logRooms
+    unless missingEnvironmentForApi(msg)
+      if room in @logRooms
         date = moment.utc()
         log['@timestamp'] = date.format()
         json = JSON.stringify(log)
 
-        index = logIndexName
+        index = @logIndexName
         index = index + '-' + date.format('YYYY.MM.DD')
 
-        msg.http(logESUrl)
+        @robot.http(@logESUrl)
           .path(index + '/irclog/')
           .post(json) (err, res, body) ->
             if res.statusCode > 299
-              robot.logger.warning res.statusCode
-              robot.logger.warning body
+              @robot.logger.warning res.statusCode
+              @robot.logger.warning body
 
 
 
@@ -81,17 +75,17 @@ class ESLogger
       size: 1000
     }
     json = JSON.stringify(query)
-    index = logIndexName + '-' + start.format('YYYY.MM.DD')
-    index_end = logIndexName + '-' + stop.format('YYYY.MM.DD')
+    index = @logIndexName + '-' + start.format('YYYY.MM.DD')
+    index_end = @logIndexName + '-' + stop.format('YYYY.MM.DD')
     if index == index_end
-      searchES index, json, (body) ->
+      @searchES index, json, (body) ->
         cb body.hits.hits
     else
-      searchES index, json, (body) ->
-        searchES index_end, json, (body_end) ->
+      @searchES index, json, (body) ->
+        @searchES index_end, json, (body_end) ->
           cb body.hits.hits.concat(body_end.hits.hits)
 
-  getLastTerm = (room, term, cb) ->
+  getLastTerm: (room, term, cb) ->
     query = {
       query: {
         bool: {
@@ -123,12 +117,11 @@ class ESLogger
     }
     json = JSON.stringify(query)
     # console.log json
-    searchAllES json, (body) ->
+    @searchAllES json, (body) ->
       cb body.hits.hits
 
-
-  searchAllES = (json, cb) ->
-    robot.http(logESUrl)
+  searchAllES: (json, cb) ->
+    @robot.http(@logESUrl)
       .path('/logstash-*/_search')
       .get(json) (err, res, body) ->
         switch res.statusCode
@@ -139,8 +132,8 @@ class ESLogger
             json_body = null
         cb json_body
 
-  searchES = (index, json, cb) ->
-    robot.http(logESUrl)
+  searchES: (index, json, cb) ->
+    @robot.http(@logESUrl)
       .path(index + '/_search')
       .post(json) (err, res, body) ->
         switch res.statusCode
@@ -151,113 +144,11 @@ class ESLogger
             json_body = null
         cb json_body
 
-
-
-  getLogs = (room, start, stop, cb) ->
-    # would be good to replace this with a filter, we don't need relevance
-    query = {
-      query: {
-        bool: {
-          must: [
-            {
-              range:
-                "@timestamp": {
-                  from: start,
-                  to: stop
-                }
-            },
-            {
-              match_phrase: {
-                room: room
-              }
-            }
-          ]
-        }
-      },
-      sort: {
-        "@timestamp": {
-          order: "asc"
-        }
-      },
-      size: 1000
-    }
-    json = JSON.stringify(query)
-    index = logIndexName + '-' + start.format('YYYY.MM.DD')
-    index_end = logIndexName + '-' + stop.format('YYYY.MM.DD')
-    if index == index_end
-      searchES index, json, (body) ->
-        cb body.hits.hits
-    else
-      searchES index, json, (body) ->
-        searchES index_end, json, (body_end) ->
-          cb body.hits.hits.concat(body_end.hits.hits)
-
-  getLastTerm = (room, term, cb) ->
-    query = {
-      query: {
-        bool: {
-          must: [
-            {
-              match_phrase: {
-                message: term
-              }
-            },
-            {
-              match_phrase: {
-                room: room
-              }
-            }
-          ],
-          must_not: {
-            match_phrase: {
-              message: '.recall '
-            }
-          }
-        }
-      },
-      sort: {
-        "@timestamp": {
-          order: "desc"
-        }
-      },
-      size: 1
-    }
-    json = JSON.stringify(query)
-    # console.log json
-    searchAllES json, (body) ->
-      cb body.hits.hits
-
-
-  searchAllES = (json, cb) ->
-    robot.http(logESUrl)
-      .path('/logstash-*/_search')
-      .get(json) (err, res, body) ->
-        switch res.statusCode
-          when 200 then json_body = JSON.parse(body)
-          else
-            console.log res.statusCode
-            console.log body
-            json_body = null
-        cb json_body
-
-  searchES = (index, json, cb) ->
-    robot.http(logESUrl)
-      .path(index + '/_search')
-      .post(json) (err, res, body) ->
-        switch res.statusCode
-          when 200 then json_body = JSON.parse(body)
-          else
-            console.log res.statusCode
-            console.log body
-            json_body = null
-        cb json_body
-
-
-  logContent = (room, lines, start, stop) ->
+  logContent: (room, lines, start, stop) ->
     time = moment().utc().format("HH:mm")
     start_date = start.format("MMM, ddd Do HH:mm")
     stop_date = stop.format("MMM, ddd Do HH:mm")
-    content = html_head("<a href=\"/#{robot.name}/logs\">Irc Logs</a> for #{room}")
+    content = @html_head("<a href=\"/#{robot.name}/logs\">Irc Logs</a> for #{room}")
     content += """
           <div>from #{start_date} to #{stop_date} - Times are UTC (now is #{time} UTC)</div>
           <br>
@@ -267,10 +158,10 @@ class ESLogger
       time = moment(line._source["@timestamp"]).utc().format("HH:mm")
       content += "<p>#{time} <span>#{escape line._source.nick}</span>: #{escape line._source.message}</p>"
     content += "</div>"
-    content += foot_html(logKibanaUrlName + '/#/dashboard/file/' + logKibanaTemplateName+ '.json?room=' + room)
+    content += @foot_html()
     content
 
-  html_head = (title) ->
+  html_head: (title) ->
     """
     <html>
       <head>
@@ -291,10 +182,14 @@ class ESLogger
         <h1>#{title}</h1>
     """
 
-  foot_html = (url) ->
-    "<div class=\"foot\">More Power on <a href=\"#{url}\">#{url}</a></div></body></html>"
+  foot_html: ->
+    if @logKibanaUrlName?
+      url = logKibanaUrlName + '/#/dashboard/file/' + logKibanaTemplateName + '.json?room=' + room
+      "<div class=\"foot\">More Power on <a href=\"#{url}\">#{url}</a></div></body></html>"
+    else
+      "</body></html>"
 
-  escape = (message) ->
+  escape: (message) ->
     return message.replace(/&/g, '&amp;')
       .replace(/</g, '&lt;')
       .replace(/>/g, '&gt;')
