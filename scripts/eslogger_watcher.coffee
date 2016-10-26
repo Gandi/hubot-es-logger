@@ -20,11 +20,12 @@ module.exports = (robot) ->
         message: msg.message.text
       eslogger.logMessageES log, msg.message.room, msg
 
+    # hubot don't `hear` its own messages, we have to log them separately
     logMessageFromRobot = (room, text) ->
       log =
-        room = room
-        nick = robot.name
-        message = text
+        room: room
+        nick: robot.name
+        message: text
       eslogger.logMessageES log, room, robot
 
     robot.logMessageFromRobot = logMessageFromRobot
