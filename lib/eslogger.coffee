@@ -13,13 +13,13 @@ class ESLogger
   missingEnvironmentForApi: (msg) ->
     missingAnything = false
     unless @logESUrl?
-      msg.send "Ensure that GANDI_LOG_ES_URL is set."
+      msg.send 'Ensure that GANDI_LOG_ES_URL is set.'
       missingAnything |= true
     unless @logRooms?
-      msg.send "Ensure that GANDI_LOG_ROOMS is set."
+      msg.send 'Ensure that GANDI_LOG_ROOMS is set.'
       missingAnything |= true
     unless @logIndexName?
-      msg.send "Ensure that GANDI_LOG_INDEX_NAME is set."
+      msg.send 'Ensure that GANDI_LOG_INDEX_NAME is set.'
       missingAnything |= true
     missingAnything
 
@@ -51,11 +51,12 @@ class ESLogger
         bool: {
           must: [
             {
-              range:
-                "@timestamp": {
+              range: {
+                '@timestamp': {
                   from: start,
                   to: stop
                 }
+              }
             },
             {
               match_phrase: {
@@ -66,8 +67,8 @@ class ESLogger
         }
       },
       sort: {
-        "@timestamp": {
-          order: "asc"
+        '@timestamp': {
+          order: 'asc'
         }
       },
       size: 1000
@@ -75,7 +76,7 @@ class ESLogger
     json = JSON.stringify(query)
     index = @logIndexName + '-' + start.format('YYYY.MM.DD')
     index_end = @logIndexName + '-' + stop.format('YYYY.MM.DD')
-    if index == index_end
+    if index is index_end
       @searchES index, json, (body) ->
         cb body.hits.hits
     else
@@ -107,8 +108,8 @@ class ESLogger
         }
       },
       sort: {
-        "@timestamp": {
-          order: "desc"
+        '@timestamp': {
+          order: 'desc'
         }
       },
       size: 1
@@ -143,9 +144,9 @@ class ESLogger
         cb json_body
 
   logContent: (room, lines, start, stop) ->
-    time = moment().utc().format("HH:mm")
-    start_date = start.format("MMM, ddd Do HH:mm")
-    stop_date = stop.format("MMM, ddd Do HH:mm")
+    time = moment().utc().format('HH:mm')
+    start_date = start.format('MMM, ddd Do HH:mm')
+    stop_date = stop.format('MMM, ddd Do HH:mm')
     content = @html_head("<a href=\"/#{robot.name}/logs\">Irc Logs</a> for #{room}")
     content += """
           <div>from #{start_date} to #{stop_date} - Times are UTC (now is #{time} UTC)</div>
@@ -153,9 +154,10 @@ class ESLogger
           <div class="commands">
         """
     for line in lines
-      time = moment(line._source["@timestamp"]).utc().format("HH:mm")
-      content += "<p>#{time} <span>#{escape line._source.nick}</span>: #{escape line._source.message}</p>"
-    content += "</div>"
+      time = moment(line._source['@timestamp']).utc().format('HH:mm')
+      content += "<p>#{time} <span>#{escape line._source.nick}</span>: "
+      content += "#{escape line._source.message}</p>"
+    content += '</div>'
     content += @foot_html()
     content
 
@@ -166,14 +168,45 @@ class ESLogger
       <meta charset="utf-8" />
       <title>#{title}</title>
       <style type="text/css">
-        body { background: #d3d6d9; color: #555; text-shadow: 0 1px 1px rgba(255, 255, 255, .5); font-family: sans serif; }
-        h1 { margin: 8px 0; padding: 0; }
-        p { font-family: monospace; border-bottom: 1px solid #eee; padding: 2px 0; margin: 0; color: #111; }
-        p span { width: 120px; display: inline-block; text-align: right; font-weight: bold; }
-        p:hover { color: #000; background-color: #fff; }
-        a { text-decoration: none; color: #249; }
-        a:hover { background-color: #ee9; }
-        .foot { padding: 20px 10px; margin-top: 30px; background-color: #a3a6a9; }
+        body {
+          background: #d3d6d9;
+          color: #555;
+          text-shadow: 0 1px 1px rgba(255, 255, 255, .5);
+          font-family: sans serif;
+        }
+        h1 {
+          margin: 8px 0;
+          padding: 0;
+        }
+        p {
+          font-family: monospace;
+          border-bottom: 1px solid #eee;
+          padding: 2px 0;
+          margin: 0;
+          color: #111;
+        }
+        p span {
+          width: 120px;
+          display: inline-block;
+          text-align: right;
+          font-weight: bold;
+        }
+        p:hover {
+          color: #000;
+          background-color: #fff;
+        }
+        a {
+          text-decoration: none;
+          color: #249;
+        }
+        a:hover {
+          background-color: #ee9;
+        }
+        .foot {
+          padding: 20px 10px;
+          margin-top: 30px;
+          background-color: #a3a6a9;
+        }
       </style>
       </head>
       <body>
@@ -185,7 +218,7 @@ class ESLogger
       url = logKibanaUrlName + '/#/dashboard/file/' + logKibanaTemplateName + '.json?room=' + room
       "<div class=\"foot\">More Power on <a href=\"#{url}\">#{url}</a></div></body></html>"
     else
-      "</body></html>"
+      '</body></html>'
 
   escape: (message) ->
     return message.replace(/&/g, '&amp;')

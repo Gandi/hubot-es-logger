@@ -11,11 +11,11 @@ module.exports = (robot) ->
   robot.eslogger ?= new ESLogger(robot)
   eslogger = robot.eslogger
 
-  if eslogger.logAnnounce? and eslogger.logAnnounce isnt "false"
+  if eslogger.logAnnounce? and eslogger.logAnnounce isnt 'false'
     robot.enter (msg) ->
       unless eslogger.missingEnvironmentForApi(msg)
         room = msg.message.user.room
         if room in eslogger.logRooms
-          if msg.message.user.name != robot.name
+          if msg.message.user.name isnt robot.name
             delete msg.message.user.room
             msg.send "Check the logs on #{eslogger.getLogURL(room)}"

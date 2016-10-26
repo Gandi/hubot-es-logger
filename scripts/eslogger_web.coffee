@@ -25,9 +25,9 @@ module.exports = (robot) ->
 
   robot.router.get "/#{robot.name}/logs/:room", (req, res) ->
     room = req.params.room
-    if room && "#" + room in logRooms
+    if room and '#' + room in logRooms
       duration = 8
-      room = "#" + room
+      room = '#' + room
       start = moment.utc().subtract(duration, 'hours')
       stop = moment.utc()
       eslogger.getLogs room, start, stop, (json_body) ->
@@ -35,5 +35,4 @@ module.exports = (robot) ->
         res.end logContent(room, json_body, start, stop)
     else
       res.setHeader 'content-type', 'text/plain'
-      res.status(404).end "Unkown room."
-
+      res.status(404).end 'Unkown room.'

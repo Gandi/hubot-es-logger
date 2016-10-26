@@ -39,4 +39,3 @@ module.exports = (robot) ->
           res.send "Sorry I cannot find any occurence of '#{res.match[1]}' on this channel."
     else
       res.send 'This command can only be asked in a channel.'
-
