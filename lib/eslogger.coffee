@@ -44,7 +44,7 @@ class ESLogger
               @robot.logger.warning res.statusCode
               @robot.logger.warning body
 
-  getLogs = (room, start, stop, cb) ->
+  getLogs: (room, start, stop, cb) ->
     # would be good to replace this with a filter, we don't need relevance
     query = {
       query: {
