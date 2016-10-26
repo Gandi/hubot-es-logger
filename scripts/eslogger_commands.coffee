@@ -21,23 +21,22 @@ module.exports = (robot) ->
   robot.respond /logs? version\s*$/, (res) ->
     pkg = require path.join __dirname, '..', 'package.json'
     res.send "hubot-es-logger is version #{pkg.version}"
-    res.finish()
 
-  robot.respond /logs$/, (msg) ->
-    room = msg.message.user.room
+  robot.respond /logs$/, (res) ->
+    room = res.message.user.room
     if room in eslogger.logRooms
-      msg.send "Check the logs on #{eslogger.getLogURL(room)}"
+      res.send "Check the logs on #{eslogger.getLogURL(room)}"
 
-  robot.respond /recall (.*)$/, (msg) ->
-    room = msg.message.user.room
+  robot.respond /recall (.*)$/, (res) ->
+    room = res.message.user.room
     if room?
-      eslogger.getLastTerm room, msg.match[1], (result) ->
+      eslogger.getLastTerm room, res.match[1], (result) ->
         if result.length > 0
           data = result[0]['_source']
           timestamp = moment(data['@timestamp']).format('YYYY-MM-DD HH:mm')
-          msg.send "#{timestamp} <#{data.nick}> #{data.message}"
+          res.send "#{timestamp} <#{data.nick}> #{data.message}"
         else
-          msg.send "Sorry I cannot find any occurence of '#{msg.match[1]}' on this channel."
+          res.send "Sorry I cannot find any occurence of '#{res.match[1]}' on this channel."
     else
-      msg.send 'This command can only be asked in a channel.'
+      res.send 'This command can only be asked in a channel.'
 

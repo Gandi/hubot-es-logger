@@ -45,7 +45,7 @@ describe 'eslogger_commands', ->
   beforeEach ->
     do nock.enableNetConnect
 
-    process.env.PAGERV2_API_KEY = 'xxx'
+    process.env.ES_LOG_ROOMS = 'room1'
     room = helper.createRoom { httpd: false }
     room.robot.brain.userForId 'user', {
       name: 'user'
