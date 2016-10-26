@@ -13,11 +13,6 @@ room = null
 
 describe 'eslogger_commands', ->
 
-  hubotEmit = (e, data, tempo = 40) ->
-    beforeEach (done) ->
-      room.robot.emit e, data
-      setTimeout (done), tempo
- 
   hubotHear = (message, userName = 'momo', tempo = 40) ->
     beforeEach (done) ->
       room.user.say userName, message
@@ -49,10 +44,6 @@ describe 'eslogger_commands', ->
     room = helper.createRoom { httpd: false }
     room.robot.brain.userForId 'user', {
       name: 'user'
-    }
-    room.robot.brain.userForId 'user_with_email', {
-      name: 'user_with_email',
-      email_address: 'user@example.com'
     }
 
     room.receive = (userName, message) ->
