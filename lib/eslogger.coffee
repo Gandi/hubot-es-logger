@@ -34,15 +34,14 @@ class ESLogger
         log['@timestamp'] = date.format()
         json = JSON.stringify(log)
 
-        index = @logIndexName
-        index = index + '-' + date.format('YYYY.MM.DD')
-
-        @robot.http(@logESUrl)
-          .path(index + '/irclog/')
-          .post(json) (err, res, body) ->
-            if res.statusCode > 299
-              @robot.logger.warning res.statusCode
-              @robot.logger.warning body
+        index = @logIndexName + '-' + date.format('YYYY.MM.DD')
+        console.log body
+        # @robot.http(@logESUrl)
+        #   .path(index + '/irclog/')
+        #   .post(json) (err, res, body) ->
+        #     if res.statusCode > 299
+        #       @robot.logger.warning res.statusCode
+        #       @robot.logger.warning body
 
   getLogs: (room, start, stop, cb) ->
     # would be good to replace this with a filter, we don't need relevance
