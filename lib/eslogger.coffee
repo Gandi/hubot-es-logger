@@ -1,3 +1,6 @@
+moment = require 'moment'
+path   = require 'path'
+
 class ESLogger
 
   constructor: (@robot) ->
@@ -25,23 +28,22 @@ class ESLogger
 
 
   getLogURL: (room) ->
-    process.env.HUBOT_BASE_URL + path.join(robot.name, 'logs', room.slice(1))
+    process.env.HUBOT_BASE_URL + path.join(@robot.name, 'logs', room.slice(1))
 
   logMessageES: (log, room, msg) ->
-    unless missingEnvironmentForApi(msg)
+    unless @missingEnvironmentForApi(msg)
       if room in @logRooms
         date = moment.utc()
         log['@timestamp'] = date.format()
         json = JSON.stringify(log)
 
         index = @logIndexName + '-' + date.format('YYYY.MM.DD')
-        console.log body
-        # @robot.http(@logESUrl)
-        #   .path(index + '/irclog/')
-        #   .post(json) (err, res, body) ->
-        #     if res.statusCode > 299
-        #       @robot.logger.warning res.statusCode
-        #       @robot.logger.warning body
+        @robot.http(@logESUrl)
+          .path(index + '/irclog/')
+          .post(json) (err, res, body) =>
+            if res.statusCode > 299
+              @robot.logger.warning res.statusCode
+              @robot.logger.warning body
 
   getLogs: (room, start, stop, cb) ->
     # would be good to replace this with a filter, we don't need relevance
@@ -73,9 +75,11 @@ class ESLogger
       size: 1000
     }
     json = JSON.stringify(query)
+    console.log json
     index = @logIndexName + '-' + start.format('YYYY.MM.DD')
     index_end = @logIndexName + '-' + stop.format('YYYY.MM.DD')
     if index is index_end
+
       @searchES index, json, (body) ->
         cb body.hits.hits
     else
@@ -114,13 +118,13 @@ class ESLogger
       size: 1
     }
     json = JSON.stringify(query)
-    # console.log json
+    console.log json
     @searchAllES json, (body) ->
       cb body.hits.hits
 
   searchAllES: (json, cb) ->
     @robot.http(@logESUrl)
-      .path('/logstash-*/_search')
+      .path('/' + @logIndexName + '-*/_search')
       .get(json) (err, res, body) ->
         switch res.statusCode
           when 200 then json_body = JSON.parse(body)
@@ -146,7 +150,7 @@ class ESLogger
     time = moment().utc().format('HH:mm')
     start_date = start.format('MMM, ddd Do HH:mm')
     stop_date = stop.format('MMM, ddd Do HH:mm')
-    content = @html_head("<a href=\"/#{robot.name}/logs\">Irc Logs</a> for #{room}")
+    content = @html_head("<a href=\"/#{@robot.name}/logs\">Irc Logs</a> for #{room}")
     content += """
           <div>from #{start_date} to #{stop_date} - Times are UTC (now is #{time} UTC)</div>
           <br>
@@ -155,7 +159,7 @@ class ESLogger
     for line in lines
       time = moment(line._source['@timestamp']).utc().format('HH:mm')
       content += "<p>#{time} <span>#{escape line._source.nick}</span>: "
-      content += "#{escape line._source.message}</p>"
+      content += "#{@escape line._source.message}</p>"
     content += '</div>'
     content += @foot_html()
     content
@@ -214,7 +218,7 @@ class ESLogger
 
   foot_html: ->
     if @logKibanaUrlName?
-      url = logKibanaUrlName + '/#/dashboard/file/' + logKibanaTemplateName + '.json?room=' + room
+      url = @logKibanaUrlName + '/#/dashboard/file/' + @logKibanaTemplateName + '.json?room=' + room
       "<div class=\"foot\">More Power on <a href=\"#{url}\">#{url}</a></div></body></html>"
     else
       '</body></html>'

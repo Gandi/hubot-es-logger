@@ -8,8 +8,8 @@
 # Author:
 #   mose
 
-path = require('path')
-moment = require('moment')
+path = require 'path'
+moment = require 'moment'
 ESLogger = require '../lib/eslogger'
 
 module.exports = (robot) ->

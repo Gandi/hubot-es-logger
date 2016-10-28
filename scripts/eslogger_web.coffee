@@ -7,7 +7,7 @@
 # Author:
 #   mose
 
-moment = require('moment')
+moment = require 'moment'
 ESLogger = require '../lib/eslogger'
 
 module.exports = (robot) ->
@@ -25,14 +25,14 @@ module.exports = (robot) ->
 
   robot.router.get "/#{robot.name}/logs/:room", (req, res) ->
     room = req.params.room
-    if room and '#' + room in logRooms
-      duration = 8
+    if room and '#' + room in eslogger.logRooms
+      duration = 4
       room = '#' + room
       start = moment.utc().subtract(duration, 'hours')
       stop = moment.utc()
       eslogger.getLogs room, start, stop, (json_body) ->
         res.setHeader 'content-type', 'text/html'
-        res.end logContent(room, json_body, start, stop)
+        res.end eslogger.logContent(room, json_body, start, stop)
     else
       res.setHeader 'content-type', 'text/plain'
       res.status(404).end 'Unkown room.'
