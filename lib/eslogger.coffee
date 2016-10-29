@@ -42,11 +42,27 @@ class ESLogger
         else
           index = @logIndexName + '-' + date.format('YYYY.MM.DD')
         @robot.http(@logESUrl)
-          .path(index + '/irclog/')
+          .path(index)
           .post(json) (err, res, body) =>
-            if res.statusCode > 299
-              @robot.logger.warning res.statusCode
-              @robot.logger.warning body
+            if res.statusCode is 404
+              json_body = JSON.parse(body)
+              if json_body.error.type is 'index_not_found_exception'
+                @createIndex index, =>
+                  @logMessageES log, room, msg
+            else
+              if res.statusCode > 299
+                @robot.logger.warning res.statusCode
+                @robot.logger.warning body
+
+  createIndex: (index, cb) ->
+    @robot.http(@logESUrl)
+      .path(index)
+      .put() (err, res, body) =>
+        if res.statusCode > 299
+          @robot.logger.warning res.statusCode
+          @robot.logger.warning body
+        else
+          cb ()
 
   getLogs: (room, start, stop, cb) ->
     # would be good to replace this with a filter, we don't need relevance
