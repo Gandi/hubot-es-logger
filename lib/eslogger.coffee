@@ -9,6 +9,7 @@ class ESLogger
     @logESUrl = process.env.ES_LOG_ES_URL
     @logRooms = process.env.ES_LOG_ROOMS.split(',')
     @logIndexName = process.env.ES_LOG_INDEX_NAME
+    @logSingleIndex = process.env.ES_LOG_SINGLE_INDEX
     @logKibanaUrlName = process.env.ES_LOG_KIBANA_URL
     @logKibanaTemplateName = process.env.ES_LOG_KIBANA_TEMPLATE
 
@@ -36,8 +37,10 @@ class ESLogger
         date = moment.utc()
         log['@timestamp'] = date.format()
         json = JSON.stringify(log)
-
-        index = @logIndexName + '-' + date.format('YYYY.MM.DD')
+        if @logSingleIndex? and @logSingleIndex isnt 'false'
+          index = @logIndexName
+        else
+          index = @logIndexName + '-' + date.format('YYYY.MM.DD')
         @robot.http(@logESUrl)
           .path(index + '/irclog/')
           .post(json) (err, res, body) =>
@@ -76,16 +79,19 @@ class ESLogger
     }
     json = JSON.stringify(query)
     console.log json
-    index = @logIndexName + '-' + start.format('YYYY.MM.DD')
-    index_end = @logIndexName + '-' + stop.format('YYYY.MM.DD')
-    if index is index_end
-
-      @searchES index, json, (body) ->
+    if @logSingleIndex? and @logSingleIndex isnt 'false'
+      @searchES @logIndexName, json, (body) ->
         cb body.hits.hits
     else
-      @searchES index, json, (body) ->
-        @searchES index_end, json, (body_end) ->
-          cb body.hits.hits.concat(body_end.hits.hits)
+      index = @logIndexName + '-' + start.format('YYYY.MM.DD')
+      index_end = @logIndexName + '-' + stop.format('YYYY.MM.DD')
+      if index is index_end
+        @searchES index, json, (body) ->
+          cb body.hits.hits
+      else
+        @searchES index, json, (body) ->
+          @searchES index_end, json, (body_end) ->
+            cb body.hits.hits.concat(body_end.hits.hits)
 
   getLastTerm: (room, term, cb) ->
     query = {
@@ -118,13 +124,16 @@ class ESLogger
       size: 1
     }
     json = JSON.stringify(query)
-    console.log json
     @searchAllES json, (body) ->
       cb body.hits.hits
 
   searchAllES: (json, cb) ->
+    if @logSingleIndex? and @logSingleIndex isnt 'false'
+      url = '/' + @logIndexName + '/_search'
+    else
+      url = '/' + @logIndexName + '-*/_search'
     @robot.http(@logESUrl)
-      .path('/' + @logIndexName + '-*/_search')
+      .path(url)
       .get(json) (err, res, body) ->
         switch res.statusCode
           when 200 then json_body = JSON.parse(body)
