@@ -44,10 +44,11 @@ class ESLogger
         @robot.http(@logESUrl)
           .path(index)
           .post(json) (err, res, body) =>
+            console.log res.statusCode
             if res.statusCode is 404
               json_body = JSON.parse(body)
               if json_body.error.type is 'index_not_found_exception'
-                @createIndex index, =>
+                @createIndex index, () =>
                   @logMessageES log, room, msg
             else
               if res.statusCode > 299
@@ -62,7 +63,7 @@ class ESLogger
           @robot.logger.warning res.statusCode
           @robot.logger.warning body
         else
-          cb ()
+          cb()
 
   getLogs: (room, start, stop, cb) ->
     # would be good to replace this with a filter, we don't need relevance
