@@ -60,6 +60,7 @@ The web interface for now only shows the last 24 hours of discussion, but it wil
 ToDo
 --------
 - test coverage
+- improve error management for web part in case there is no index
 - add search features on web interface
 - add time navigation on web interface
 - test with slack adapter
