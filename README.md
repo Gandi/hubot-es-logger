@@ -42,7 +42,7 @@ You will need to set various environment variables to get the logging configured
 | `ES_LOG_ENABLED`             | no       | 'true'    | useful to disable logging at bot start in dev env |
 | `ES_LOG_ANNOUNCE`            | no       | 'true'    | if set, will private message to people joining the channel, signaling the url where to browse the logs |
 | `ES_LOG_ES_URL`              | yes      |           | the url to your Elasticsearch server              |
-| `ES_LOG_ROOMS`               | yes      |           | comma-separated list of channels to log           |
+| `ES_LOG_ROOMS`               | yes      |           | comma-separated list of channels to log ie '#trolls,#another_channel,#third'          |
 | `ES_LOG_INDEX_NAME`          | no       | 'irclogs' | name of the Elasticsearch index                   |
 | `ES_LOG_SINGLE_INDEX`        | no       | 'false'   | if 'true', it will use only one index, but by default, one index is created per day |
 | `ES_LOG_KIBANA_URL`          | no       |           | if you have a kibana access to your irc logs, it will be displayed on the web page |
