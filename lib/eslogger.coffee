@@ -8,7 +8,7 @@ class ESLogger
     @logAnnounce = process.env.ES_LOG_ANNOUNCE
     @logESUrl = process.env.ES_LOG_ES_URL
     @logRooms = process.env.ES_LOG_ROOMS.split(',')
-    @logIndexName = process.env.ES_LOG_INDEX_NAME
+    @logIndexName = process.env.ES_LOG_INDEX_NAME or 'irclogs'
     @logSingleIndex = process.env.ES_LOG_SINGLE_INDEX
     @logKibanaUrlName = process.env.ES_LOG_KIBANA_URL
     @logKibanaTemplateName = process.env.ES_LOG_KIBANA_TEMPLATE
@@ -17,13 +17,10 @@ class ESLogger
   missingEnvironmentForApi: (msg) ->
     missingAnything = false
     unless @logESUrl?
-      msg.send 'Ensure that GANDI_LOG_ES_URL is set.'
+      msg.send 'Ensure that ES_LOG_ES_URL is set.'
       missingAnything |= true
     unless @logRooms?
-      msg.send 'Ensure that GANDI_LOG_ROOMS is set.'
-      missingAnything |= true
-    unless @logIndexName?
-      msg.send 'Ensure that GANDI_LOG_INDEX_NAME is set.'
+      msg.send 'Ensure that ES_LOG_ROOMS is set.'
       missingAnything |= true
     missingAnything
 
