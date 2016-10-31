@@ -42,24 +42,79 @@ class ESLogger
         else
           index = @logIndexName + '-' + date.format('YYYY.MM.DD')
         @robot.http(@logESUrl)
-          .path(index)
+          .path(index + '/line')
           .post(json) (err, res, body) =>
-            console.log res.statusCode
+            # console.log res.statusCode
             if res.statusCode is 404
               json_body = JSON.parse(body)
               if json_body.error.type is 'index_not_found_exception'
                 @createIndex index, () =>
+                  console.log "re-launch"
                   @logMessageES log, room, msg
             else
               if res.statusCode > 299
+                @robot.logger.warning "logMessageES / res.statusCode > 299"
                 @robot.logger.warning res.statusCode
                 @robot.logger.warning body
 
   createIndex: (index, cb) ->
+    mapping = {
+      'mapping': {
+        'line': {
+          "properties": {
+            "@timestamp": {
+              "type": "date",
+              "format": "dateOptionalTime"
+            },
+            "message": {
+              "type": "string",
+              "norms": {
+                "enabled": false
+              },
+              "fields": {
+                "raw": {
+                  "type": "string",
+                  "index": "not_analyzed",
+                  "ignore_above": 256
+                }
+              }
+            },
+            "nick": {
+              "type": "string",
+              "norms": {
+                "enabled": false
+              },
+              "fields": {
+                "raw": {
+                  "type": "string",
+                  "index": "not_analyzed",
+                  "ignore_above": 256
+                }
+              }
+            },
+            "room": {
+              "type": "string",
+              "norms": {
+                "enabled": false
+              },
+              "fields": {
+                "raw": {
+                  "type": "string",
+                  "index": "not_analyzed",
+                  "ignore_above": 256
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    json = JSON.stringify(mapping)
     @robot.http(@logESUrl)
       .path(index)
-      .put() (err, res, body) =>
+      .put(json) (err, res, body) =>
         if res.statusCode > 299
+          @robot.logger.warning "createIndex / res.statusCode > 299"
           @robot.logger.warning res.statusCode
           @robot.logger.warning body
         else
@@ -155,6 +210,7 @@ class ESLogger
         switch res.statusCode
           when 200 then json_body = JSON.parse(body)
           else
+            @robot.logger.warning "searchAllES / res.statusCode != 200"
             console.log res.statusCode
             console.log body
             json_body = null
@@ -167,6 +223,7 @@ class ESLogger
         switch res.statusCode
           when 200 then json_body = JSON.parse(body)
           else
+            @robot.logger.warning "searchES / res.statusCode != 200"
             console.log res.statusCode
             console.log body
             json_body = null
