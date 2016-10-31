@@ -47,8 +47,22 @@ You will need to set various environment variables to get the logging configured
 | `ES_LOG_KIBANA_TEMPLATE`     | no       |           | the template used in kibana (for building the url) |
 
 
+Web interface
+--------------------
 
-### Contribute
+Make sure you secure your web interface appropriately (with hubot-restrict-ip or putting hubot behind a proxy).
+
+The web interface for now only shows the last 24 hours of discussion, but it will be configruable, searchable and navigable soon in next versions.
+
+ToDo
+--------
+- test coverage
+- add search features on web interface
+- add time navigation on web interface
+- test with slack adapter
+
+Contribute
+-------------
 
 Feel free to open a PR if you find any bug, typo, want to improve documentation, or think about a new feature. 
 

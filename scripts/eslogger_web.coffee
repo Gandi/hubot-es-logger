@@ -26,7 +26,7 @@ module.exports = (robot) ->
   robot.router.get "/#{robot.name}/logs/:room", (req, res) ->
     room = req.params.room
     if room and '#' + room in eslogger.logRooms
-      duration = 4
+      duration = 24
       room = '#' + room
       start = moment.utc().subtract(duration, 'hours')
       stop = moment.utc()
