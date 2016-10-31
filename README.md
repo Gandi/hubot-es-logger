@@ -61,6 +61,7 @@ ToDo
 --------
 - test coverage
 - log the bot
+- log the join and part of users
 - add an indication of logs enabled/disabled to the `.logs` command
 - improve error management for web part in case there is no index
 - add search features on web interface
