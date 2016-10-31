@@ -1,6 +1,8 @@
 Hubot-es-logger
 ===================
 
+[![Version](https://img.shields.io/npm/v/hubot-es-logger.svg)](https://www.npmjs.com/package/hubot-es-logger)
+[![Downloads](https://img.shields.io/npm/dt/hubot-es-logger.svg)](https://www.npmjs.com/package/hubot-es-logger)
 [![Build Status](https://img.shields.io/travis/Gandi/hubot-es-logger.svg)](https://travis-ci.org/Gandi/hubot-es-logger)
 [![Dependency Status](https://gemnasium.com/Gandi/hubot-es-logger.svg)](https://gemnasium.com/Gandi/hubot-es-logger)
 [![Coverage Status](http://img.shields.io/codeclimate/coverage/github/Gandi/hubot-es-logger.svg)](https://codeclimate.com/github/Gandi/hubot-es-logger/coverage)
