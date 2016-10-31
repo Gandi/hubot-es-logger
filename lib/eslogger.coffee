@@ -51,11 +51,17 @@ class ESLogger
                 @createIndex index, () =>
                   console.log "re-launch"
                   @logMessageES log, room, msg
+              else
+                @robot.logger.warning "logMessageES / res.statusCode == 400 and json_body.error.type != index_not_found_exception"
+                @robot.logger.warning res.statusCode
+                @robot.logger.warning body
             else
               if res.statusCode > 299
                 @robot.logger.warning "logMessageES / res.statusCode > 299"
                 @robot.logger.warning res.statusCode
                 @robot.logger.warning body
+              else
+                @robot.logger.debug "logged."
 
   createIndex: (index, cb) ->
     mapping = {
