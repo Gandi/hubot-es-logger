@@ -36,11 +36,11 @@ module.exports = (robot) ->
       faketime = moment.utc().add(1, 'second').format()
       eslogger.logMessageES log, room, robot, faketime
 
-    override(robot.adapter, 'send', after( (envelope, strings...) ->
+    override robot.adapter, 'send', after (envelope, strings...) ->
       if envelope.room?
         for str in strings
           logMessageFromRobot envelope.room, str
-    ))
+    
 
     # normal message on channel
     robot.hear /.*/, (msg) ->
