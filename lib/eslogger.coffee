@@ -28,16 +28,16 @@ class ESLogger
   getLogURL: (room) ->
     process.env.HUBOT_BASE_URL + path.join(@robot.name, 'logs', room.slice(1))
 
-  logMessageES: (log, room, msg) ->
+  logMessageES: (log, room, msg, timestamp = null) ->
     unless @missingEnvironmentForApi(msg)
       if room in @logRooms
-        date = moment.utc()
-        log['@timestamp'] = date.format()
+        timestamp ?= moment.utc().format()
+        log['@timestamp'] = timestamp
         json = JSON.stringify(log)
         if @logSingleIndex? and @logSingleIndex isnt 'false'
           index = @logIndexName
         else
-          index = @logIndexName + '-' + date.format('YYYY.MM.DD')
+          index = @logIndexName + '-' + moment.utc().format('YYYY.MM.DD')
         @robot.http(@logESUrl)
           .path(index + '/line')
           .post(json) (err, res, body) =>
@@ -46,7 +46,7 @@ class ESLogger
               json_body = JSON.parse(body)
               if json_body.error.type is 'index_not_found_exception'
                 @createIndex index, () =>
-                  console.log "re-launch"
+                  # console.log "re-launch"
                   @logMessageES log, room, msg
               else
                 @robot.logger.warning "logMessageES / res.statusCode == 400 and json_body.error.type != index_not_found_exception"
@@ -153,7 +153,7 @@ class ESLogger
       size: 1000
     }
     json = JSON.stringify(query)
-    console.log json
+    # console.log json
     if @logSingleIndex? and @logSingleIndex isnt 'false'
       @searchES @logIndexName, json, (body) ->
         cb body.hits.hits
@@ -243,7 +243,7 @@ class ESLogger
           <div class="commands">
         """
     for line in lines
-      time = moment(line._source['@timestamp']).utc().format('HH:mm')
+      time = moment(line._source['@timestamp']).utc().format('HH:mm:ss.SSS')
       content += "<p>#{time} <span>#{escape line._source.nick}</span>: "
       content += "#{@escape line._source.message}</p>"
     content += '</div>'

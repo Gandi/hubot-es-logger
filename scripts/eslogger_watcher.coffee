@@ -33,7 +33,8 @@ module.exports = (robot) ->
         nick: robot.name
         message: text
       }
-      eslogger.logMessageES log, room, robot
+      faketime = moment.utc().add(1, 'second').format()
+      eslogger.logMessageES log, room, robot, faketime
 
     override(robot.adapter, 'send', after( (envelope, strings...) ->
       if envelope.room?
