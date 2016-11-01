@@ -31,3 +31,9 @@ module.exports = (robot) ->
       eslogger.logMessageES log, room, robot
 
     robot.logMessageFromRobot = logMessageFromRobot
+
+    robot.enter (res) ->
+      console.log res
+
+    robot.leave (res) ->
+      console.log res
