@@ -1,7 +1,8 @@
 Hubot-pager-v2 Changelog
 ==========================
 
-### 0.1.1 - wip
+### 0.1.1 - 2016-11-02
+- added logging for join / part
 - added a hack to log messages sent by the bot
 
 ### 0.1.0 - 2016-10-31
