@@ -236,7 +236,7 @@ class ESLogger
     time = moment().utc().format('HH:mm')
     start_date = start.format('MMM, ddd Do HH:mm')
     stop_date = stop.format('MMM, ddd Do HH:mm')
-    content = @html_head("<a href=\"/#{@robot.name}/logs\">Irc Logs</a> for #{room}")
+    content = @html_head(room)
     content += """
           <div>from #{start_date} to #{stop_date} - Times are UTC (now is #{time} UTC)</div>
           <br>
