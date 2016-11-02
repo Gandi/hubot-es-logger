@@ -43,13 +43,13 @@ module.exports = (robot) ->
     
 
     # normal message on channel
-    robot.hear /.*/, (msg) ->
+    robot.hear /.*/, (res) ->
       log = {
-        room: msg.message.room
-        nick: msg.message.user.name
-        message: msg.message.text
+        room: res.message.room
+        nick: res.message.user.name
+        message: res.message.text
       }
-      eslogger.logMessageES log, msg.message.room, msg
+      eslogger.logMessageES log, res.message.room, res
 
     robot.enter (res) ->
       console.log res

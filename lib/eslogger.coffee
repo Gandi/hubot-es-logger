@@ -243,9 +243,13 @@ class ESLogger
           <div class="commands">
         """
     for line in lines
-      time = moment(line._source['@timestamp']).utc().format('HH:mm:ss.SSS')
-      content += "<p>#{time} <span>#{escape line._source.nick}</span>: "
-      content += "#{@escape line._source.message}</p>"
+      time = moment(line._source['@timestamp']).utc().format('HH:mm:ss')
+      if line._source.nick? and line._source.nick isnt ''
+        content += "<p>#{time} <span>#{escape line._source.nick}</span>: "
+        content += "#{@escape line._source.message}</p>"
+      else
+        content += "<p>#{time} <span>-</span>: "
+        content += "<i>#{@escape line._source.message}</i></p>"
     content += '</div>'
     content += @foot_html()
     content
@@ -279,6 +283,9 @@ class ESLogger
           display: inline-block;
           text-align: right;
           font-weight: bold;
+        }
+        p > i {
+          color: #666;
         }
         p:hover {
           color: #000;
