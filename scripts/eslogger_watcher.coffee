@@ -52,11 +52,17 @@ module.exports = (robot) ->
       eslogger.logMessageES log, res.message.room, res
 
     robot.enter (res) ->
-      msg = res.message
-      line = "#{msg.user.name} has joined #{msg.room} (#{msg.text})"
-      eslogger.logMessageES line, msg.room, res
+      log = {
+        room: res.message.room
+        nick: ''
+        message: "#{res.message.user.name} has joined #{res.message.room} (#{res.message.text})"
+      }
+      eslogger.logMessageES log, msg.room, res
 
     robot.leave (res) ->
-      msg = res.message
-      line = "#{msg.user.name} has quit #{msg.room}"
-      eslogger.logMessageES line, msg.room, res
+      log = {
+        room: res.message.room
+        nick: ''
+        message: "#{res.message.user.name} has quit #{res.message.room}"
+      }
+      eslogger.logMessageES log, msg.room, res
