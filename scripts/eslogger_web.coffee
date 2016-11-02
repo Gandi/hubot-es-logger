@@ -16,7 +16,7 @@ module.exports = (robot) ->
   eslogger = robot.eslogger
 
   robot.router.get "/#{robot.name}/logs", (req, res) ->
-    content = eslogger.html_head("<a href=\"/#{robot.name}/logs\">Irc Logs</a>")
+    content = eslogger.html_head(null)
     for room in eslogger.logRooms.sort()
       content += "<p><span></span><a href=\"/#{robot.name}/logs/#{room.slice(1)}\">#{room}</a></p>"
     content += eslogger.foot_html()
