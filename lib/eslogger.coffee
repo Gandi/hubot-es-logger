@@ -248,18 +248,18 @@ class ESLogger
         content += "<p>#{time} <span>#{escape line._source.nick}</span>: "
         content += "#{@escape line._source.message}</p>"
       else
-        content += "<p>#{time} <span>-</span>: "
+        content += "<p>#{time} <span>&nbsp;</span>: "
         content += "<i>#{@escape line._source.message}</i></p>"
     content += '</div>'
     content += @foot_html()
     content
 
-  html_head: (title) ->
+  html_head: (room) ->
     """
     <html>
       <head>
       <meta charset="utf-8" />
-      <title>#{title}</title>
+      <title>Irc Logs for #{room}</title>
       <style type="text/css">
         body {
           background: #d3d6d9;
@@ -306,7 +306,7 @@ class ESLogger
       </style>
       </head>
       <body>
-        <h1>#{title}</h1>
+        <h1><a href="/#{@robot.name}/logs">Irc Logs</a> for #{room}</h1>
     """
 
   foot_html: ->
