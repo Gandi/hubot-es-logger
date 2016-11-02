@@ -55,7 +55,7 @@ module.exports = (robot) ->
       log = {
         room: res.message.room
         nick: ''
-        message: "#{res.message.user.name} has joined #{res.message.room} (#{res.message.text})"
+        message: "#{res.message.user.name} has joined #{res.message.room}"
       }
       eslogger.logMessageES log, res.message.room, res
 
@@ -63,6 +63,6 @@ module.exports = (robot) ->
       log = {
         room: res.message.room
         nick: ''
-        message: "#{res.message.user.name} has quit #{res.message.room}"
+        message: "#{res.message.user.name} has quit #{res.message.room} (#{res.message.text})"
       }
       eslogger.logMessageES log, res.message.room, res
