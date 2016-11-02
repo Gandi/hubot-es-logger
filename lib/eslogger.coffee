@@ -310,8 +310,7 @@ class ESLogger
     """
 
   title: (room, html = null) ->
-    if room?
-      room = " for #{room}"
+    room = room? ? " for #{room}" : ''
     if html?
       "<a href=\"/#{@robot.name}/logs\">Irc Logs</a>#{room}"
     else
