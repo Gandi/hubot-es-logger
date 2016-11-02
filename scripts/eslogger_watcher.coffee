@@ -52,7 +52,13 @@ module.exports = (robot) ->
       eslogger.logMessageES log, res.message.room, res
 
     robot.enter (res) ->
-      console.log res
+      msg = res.envelope.message
+      line = "#{msg.user.name} left #{msg.room} (#{msg.text})"
+      console.log line
+      console.log msg.user
 
     robot.leave (res) ->
-      console.log res
+      msg = res.envelope.message
+      line = "#{msg.user.name} joined #{msg.room}"
+      console.log line
+      console.log msg.user
