@@ -259,7 +259,7 @@ class ESLogger
     <html>
       <head>
       <meta charset="utf-8" />
-      <title>Irc Logs for #{room}</title>
+      <title>#{@title room}</title>
       <style type="text/css">
         body {
           background: #d3d6d9;
@@ -306,8 +306,16 @@ class ESLogger
       </style>
       </head>
       <body>
-        <h1><a href="/#{@robot.name}/logs">Irc Logs</a> for #{room}</h1>
+        <h1>#{@title room, 'html'}</h1>
     """
+
+  title: (room, html = null) ->
+    if room?
+      room = " for #{room}"
+    if html?
+      "<a href=\"/#{@robot.name}/logs\">Irc Logs</a>#{room}"
+    else
+      "Irc Logs#{room}"
 
   foot_html: ->
     if @logKibanaUrlName?
