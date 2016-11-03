@@ -39,8 +39,7 @@ describe 'eslogger_commands', ->
 
   beforeEach ->
     do nock.enableNetConnect
-
-    process.env.ES_LOG_ROOMS = 'room1'
+    process.env.ES_LOG_ROOMS = '#room1'
     room = helper.createRoom { httpd: false }
     room.robot.brain.userForId 'user', {
       name: 'user'
@@ -49,7 +48,7 @@ describe 'eslogger_commands', ->
     room.receive = (userName, message) ->
       new Promise (resolve) =>
         @messages.push [userName, message]
-        user = { name: userName, id: userName }
+        user = { name: userName, id: userName, room: '#room1' }
         @robot.receive(new Hubot.TextMessage(user, message), resolve)
 
   afterEach ->
@@ -59,3 +58,8 @@ describe 'eslogger_commands', ->
   say 'log version', ->
     it 'replies version number', ->
       expect(hubotResponse()).to.match /hubot-es-logger is version [0-9]+\.[0-9]+\.[0-9]+/
+
+
+  say 'logs', ->
+    it 'gives the url of the web interface', ->
+      expect(hubotResponse()).to.eql 'Check the logs on http://localhost:8080/hubot/logs/room1'
