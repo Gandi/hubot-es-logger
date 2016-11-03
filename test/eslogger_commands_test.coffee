@@ -40,6 +40,7 @@ describe 'eslogger_commands', ->
   beforeEach ->
     do nock.enableNetConnect
     process.env.ES_LOG_ROOMS = '#room1'
+    process.env.HUBOT_BASE_URL = 'http://localhost:8080/'
     room = helper.createRoom { httpd: false }
     room.robot.brain.userForId 'user', {
       name: 'user'
@@ -53,6 +54,7 @@ describe 'eslogger_commands', ->
 
   afterEach ->
     delete process.env.ES_LOG_ENABLED
+    delete process.env.HUBOT_BASE_URL
 
   # ------------------------------------------------------------------------------------------------
   say 'log version', ->
