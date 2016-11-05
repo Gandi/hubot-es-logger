@@ -36,3 +36,14 @@ module.exports = (robot) ->
     else
       res.setHeader 'content-type', 'text/plain'
       res.status(404).end 'Unkown room.'
+
+  robot.router.get "/#{robot.name}/logs/:room/count.json", (req, res) ->
+    room = req.params.room
+    if room and '#' + room in eslogger.logRooms
+      room = '#' + room
+      eslogger.getLinesPerDay room, (json_body) ->
+        res.setHeader 'content-type', 'application/json'
+        res.end json_body
+    else
+      res.setHeader 'content-type', 'application/json'
+      res.status(404).end '{}'

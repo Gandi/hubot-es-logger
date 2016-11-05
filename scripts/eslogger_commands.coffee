@@ -26,6 +26,8 @@ module.exports = (robot) ->
     room = res.message.user.room
     if room in eslogger.logRooms
       res.send "Check the logs on #{eslogger.getLogURL(room)}"
+    else
+      res.send "This room (#{room}) is not logged."
 
   robot.respond /recall (.*)$/, (res) ->
     room = res.message.user.room

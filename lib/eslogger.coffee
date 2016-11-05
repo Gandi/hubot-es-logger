@@ -202,6 +202,25 @@ class ESLogger
     @searchAllES json, (body) ->
       cb body.hits.hits
 
+  getLinesPerDay: (room) ->
+    query = {
+      query: {
+        match_phrase: {
+          room: room
+        }
+      },
+      size: 0,
+      aggs: {
+        lines_per_day: {
+          field: '@timestamp',
+          interval: 'day'
+        }
+      }
+    }
+    json = JSON.stringify(query)
+    @searchAllES json, (body) ->
+      cb body.hits.hits
+
   searchAllES: (json, cb) ->
     if @logSingleIndex? and @logSingleIndex isnt 'false'
       url = '/' + @logIndexName + '/_search'
