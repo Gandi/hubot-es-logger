@@ -53,7 +53,7 @@ You will need to set various environment variables to get the logging configured
 Web interface
 --------------------
 
-Make sure you secure your web interface appropriately (with hubot-restrict-ip or putting hubot behind a proxy).
+Make sure you secure your web interface appropriately (with [hubot-restrict-ip](https://github.com/Gandi/hubot-restrict-ip) or putting hubot behind a proxy).
 
 The web interface for now only shows the last 24 hours of discussion, but it will be configruable, searchable and navigable soon in next versions.
 
