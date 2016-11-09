@@ -60,8 +60,8 @@ The web interface for now only shows the last 24 hours of discussion, but it wil
 ToDo
 --------
 - test coverage
-- log the bot
-- log the join and part of users
+- <s>log the bot</s> (done 0.1.1)
+- <s>log the join and part of users</s> (done 0.1.1)
 - add an indication of logs enabled/disabled to the `.logs` command
 - improve error management for web part in case there is no index
 - add search features on web interface
