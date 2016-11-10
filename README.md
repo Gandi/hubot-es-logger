@@ -41,7 +41,7 @@ You will need to set various environment variables to get the logging configured
 |------------------------------|----------|-----------|---------------------------------------------------|
 | `HUBOT_BASE_URL`             | yes      |           | the default url where your hubot web server can be reached. By default hubot launches express on port 8080 |
 | `ES_LOG_ENABLED`             | no       | 'false'   | useful to disable logging at bot start in dev env |
-| `ES_LOG_ANNOUNCE`            | no       | 'true'    | if set, will private message to people joining the channel, signaling the url where to browse the logs |
+| `ES_LOG_ANNOUNCE`            | no       | 'false'   | if set, will private message to people joining the channel, signaling the url where to browse the logs |
 | `ES_LOG_ES_URL`              | yes      |           | the url to your Elasticsearch server              |
 | `ES_LOG_ROOMS`               | yes      |           | comma-separated list of channels to log ie '#trolls,#another_channel,#third'          |
 | `ES_LOG_INDEX_NAME`          | no       | 'irclogs' | name of the Elasticsearch index                   |
