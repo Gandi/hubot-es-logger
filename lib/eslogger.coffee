@@ -26,7 +26,7 @@ class ESLogger
 
 
   getLogURL: (room) ->
-    process.env.HUBOT_BASE_URL + path.join(@robot.name, 'logs', room.slice(1))
+    process.env.HUBOT_BASE_URL + path.join(@robot.name, 'logs', room.replace(/#/, ''))
 
   logMessageES: (log, room, msg, timestamp = null) ->
     unless @missingEnvironmentForApi(msg)
