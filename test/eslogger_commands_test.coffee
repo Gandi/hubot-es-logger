@@ -39,7 +39,8 @@ describe 'eslogger_commands', ->
 
   beforeEach ->
     do nock.enableNetConnect
-    process.env.ES_LOG_ROOMS = '#room1'
+    process.env.ES_LOG_ROOMS = 'room1'
+    process.env.ES_LOG_ENABLED = 'true'
     process.env.HUBOT_BASE_URL = 'http://localhost:8080/'
     room = helper.createRoom { httpd: false }
     room.robot.brain.userForId 'user', {
@@ -49,10 +50,11 @@ describe 'eslogger_commands', ->
     room.receive = (userName, message) ->
       new Promise (resolve) =>
         @messages.push [userName, message]
-        user = { name: userName, id: userName, room: '#room1' }
+        user = { name: userName, id: userName, room: 'room1' }
         @robot.receive(new Hubot.TextMessage(user, message), resolve)
 
   afterEach ->
+    delete process.env.ES_LOG_ROOMS
     delete process.env.ES_LOG_ENABLED
     delete process.env.HUBOT_BASE_URL
 
@@ -61,7 +63,15 @@ describe 'eslogger_commands', ->
     it 'replies version number', ->
       expect(hubotResponse()).to.match /hubot-es-logger is version [0-9]+\.[0-9]+\.[0-9]+/
 
+  context 'when room1 is logged', ->
+    say 'logs', ->
+      it 'gives the url of the web interface', ->
+        expect(hubotResponse()).to.eql 'Check the logs on http://localhost:8080/hubot/logs/room1'
 
-  say 'logs', ->
-    it 'gives the url of the web interface', ->
-      expect(hubotResponse()).to.eql 'Check the logs on http://localhost:8080/hubot/logs/room1'
+  context 'when room1 is not logged', ->
+    beforeEach ->
+      room.robot.eslogger.logRooms = [ 'notlogged' ]
+    say 'logs', ->
+      it 'tells the room is not logged', ->
+        expect(hubotResponse()).to.eql 'This room (room1) is not logged.'
+
