@@ -43,4 +43,3 @@ describe 'eslogger_commands', ->
     hubotEnter 'momo'
     it 'gives him a private message with weblogs url', ->
       expect(hubotResponse()).to.eql 'Check the logs on http://localhost:8080/hubot/logs/room1'
-

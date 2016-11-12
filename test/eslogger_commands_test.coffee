@@ -74,4 +74,3 @@ describe 'eslogger_commands', ->
     say 'logs', ->
       it 'tells the room is not logged', ->
         expect(hubotResponse()).to.eql 'This room (room1) is not logged.'
-

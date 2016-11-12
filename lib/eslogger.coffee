@@ -45,66 +45,67 @@ class ESLogger
             if res.statusCode is 404
               json_body = JSON.parse(body)
               if json_body.error.type is 'index_not_found_exception'
-                @createIndex index, () =>
+                @createIndex index, =>
                   # console.log "re-launch"
                   @logMessageES log, room, msg
               else
-                @robot.logger.warning "logMessageES / res.statusCode == 400 and json_body.error.type != index_not_found_exception"
+                @robot.logger.warning 'logMessageES / res.statusCode == 400 ' +
+                                      'and json_body.error.type != index_not_found_exception'
                 @robot.logger.warning res.statusCode
                 @robot.logger.warning body
             else
               if res.statusCode > 299
-                @robot.logger.warning "logMessageES / res.statusCode > 299"
+                @robot.logger.warning 'logMessageES / res.statusCode > 299'
                 @robot.logger.warning res.statusCode
                 @robot.logger.warning body
               else
-                @robot.logger.debug "logged."
+                @robot.logger.debug 'logged.'
 
   createIndex: (index, cb) ->
     mapping = {
-      'mapping': {
-        'line': {
-          "properties": {
-            "@timestamp": {
-              "type": "date",
-              "format": "dateOptionalTime"
+      mapping: {
+        line: {
+          properties: {
+            '@timestamp': {
+              type: 'date',
+              format: 'dateOptionalTime'
             },
-            "message": {
-              "type": "string",
-              "norms": {
-                "enabled": false
+            message: {
+              type: 'string',
+              norms: {
+                enabled: false
               },
-              "fields": {
-                "raw": {
-                  "type": "string",
-                  "index": "not_analyzed",
-                  "ignore_above": 256
+              fields: {
+                raw: {
+                  type: 'string',
+                  index: 'not_analyzed',
+                  ignore_above: 256
                 }
               }
             },
-            "nick": {
-              "type": "string",
-              "norms": {
-                "enabled": false
+            nick: {
+              type: 'string',
+              norms: {
+                enabled: false
               },
-              "fields": {
-                "raw": {
-                  "type": "string",
-                  "index": "not_analyzed",
-                  "ignore_above": 256
+              fields: {
+                raw: {
+                  type: 'string',
+                  index: 'not_analyzed',
+                  ignore_above: 256
                 }
               }
             },
-            "room": {
-              "type": "string",
-              "norms": {
-                "enabled": false
+            room: {
+              type: 'string',
+              norms: {
+                enabled: false
               },
-              "fields": {
-                "raw": {
-                  "type": "string",
-                  "index": "not_analyzed",
-                  "ignore_above": 256
+              fields: {
+                raw: {
+                  type: 'string',
+                  index: 'not_analyzed',
+                  ignore_above: 256
                 }
               }
             }
@@ -117,7 +118,7 @@ class ESLogger
       .path(index)
       .put(json) (err, res, body) =>
         if res.statusCode > 299
-          @robot.logger.warning "createIndex / res.statusCode > 299"
+          @robot.logger.warning 'createIndex / res.statusCode > 299'
           @robot.logger.warning res.statusCode
           @robot.logger.warning body
         else
@@ -232,7 +233,7 @@ class ESLogger
         switch res.statusCode
           when 200 then json_body = JSON.parse(body)
           else
-            @robot.logger.warning "searchAllES / res.statusCode != 200"
+            @robot.logger.warning 'searchAllES / res.statusCode != 200'
             console.log res.statusCode
             console.log body
             json_body = null
@@ -245,7 +246,7 @@ class ESLogger
         switch res.statusCode
           when 200 then json_body = JSON.parse(body)
           else
-            @robot.logger.warning "searchES / res.statusCode != 200"
+            @robot.logger.warning 'searchES / res.statusCode != 200'
             console.log res.statusCode
             console.log body
             json_body = null

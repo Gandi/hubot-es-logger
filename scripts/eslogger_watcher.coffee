@@ -22,7 +22,7 @@ module.exports = (robot) ->
 
     after = (extra) ->
       (original) ->
-        () ->
+        ->
           returnValue = original.apply(this, arguments)
           extra.apply(this, arguments)
           returnValue
