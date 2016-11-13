@@ -1,4 +1,4 @@
-Hubot-pager-v2 Changelog
+Hubot-es-logger Changelog
 ==========================
 
 ### 0.1.2 - wip
