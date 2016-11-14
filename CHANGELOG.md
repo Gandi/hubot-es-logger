@@ -1,6 +1,9 @@
 Hubot-es-logger Changelog
 ==========================
 
+### 0.1.3 - wip
+- add an url route for displaying a specific day
+
 ### 0.1.2 - 2016-11-14
 - added a rudimentary day to day navigation
 - logs are now displayed day by day, starting at midnight

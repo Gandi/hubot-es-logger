@@ -55,6 +55,25 @@ module.exports = (robot) ->
         res.setHeader 'content-type', 'text/plain'
         res.status(404).end 'Unkown room.'
 
+  robot.router.get "/#{robot.name}/logs/:room/:year/:month/:day", (req, res) ->
+    room = req.params.room
+    day = moment.utc().year(req.params.year).month(req.params.month).day(req.params.day)
+    unless day.isValid()
+      res.setHeader 'content-type', 'text/html'
+      res.status(404).end "#{req.params.year}/#{req.params.month}/#{req.params.day} " +
+                          'cannot be understood as a date.'
+    else
+      if room and '#' + room in eslogger.logRooms
+        room = '#' + room
+        start = day.hour(0).minutes(0).seconds(0)
+        stop = day.hour(23).minutes(59).seconds(59)
+        eslogger.getLogs room, start, stop, (json_body) ->
+          res.setHeader 'content-type', 'text/html'
+          res.end eslogger.logContent(room, json_body, start, stop)
+      else
+        res.setHeader 'content-type', 'text/plain'
+        res.status(404).end 'Unkown room.'
+
 
   robot.router.get "/#{robot.name}/logs/:room/count.json", (req, res) ->
     room = req.params.room
