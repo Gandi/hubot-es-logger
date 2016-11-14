@@ -359,7 +359,7 @@ class ESLogger
         h1      { margin: 8px 0; padding: 0; }
         p       { font-family: monospace; border-bottom: 1px solid #eee; padding: 2px 0; margin: 0; color: #111; }
         p span  { width: 120px; display: inline-block; text-align: right; font-weight: bold; }
-        .search p span  { width: 200px; display: inline-block; text-align: right; font-weight: bold; }
+        .search p span  { width: 160px; display: inline-block; text-align: right; font-weight: bold; }
         p > i   { color: #666; }
         p:hover { color: #000; background-color: #fff; }
         a       { text-decoration: none; color: #249; }
