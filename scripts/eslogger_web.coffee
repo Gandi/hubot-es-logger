@@ -47,7 +47,7 @@ module.exports = (robot) ->
     else
       if room and '#' + room in eslogger.logRooms
         room = '#' + room
-        daynow = moment.utc().substract(day, 'days')
+        daynow = moment.utc().subtract(day, 'days')
         start = daynow.hour(0).minutes(0).seconds(0)
         stop = daynow.hour(23).minutes(59).seconds(59)
         eslogger.getLogs room, start, stop, (json_body) ->
