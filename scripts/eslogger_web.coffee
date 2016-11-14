@@ -57,7 +57,7 @@ module.exports = (robot) ->
 
   robot.router.get "/#{robot.name}/logs/:room/:year/:month/:day", (req, res) ->
     room = req.params.room
-    day = moment.utc().year(req.params.year).month(req.params.month).day(req.params.day)
+    day = moment.utc().year(req.params.year).month(req.params.month).date(req.params.day)
     unless day.isValid()
       res.setHeader 'content-type', 'text/html'
       res.status(404).end "#{req.params.year}/#{req.params.month}/#{req.params.day} " +
