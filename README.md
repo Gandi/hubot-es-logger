@@ -64,7 +64,7 @@ ToDo
 - <s>log the join and part of users</s> (done 0.1.1)
 - add an indication of logs enabled/disabled to the `.logs` command
 - improve error management for web part in case there is no index
-- add search features on web interface
+- <s>add search features on web interface</s> (done in 0.2.0)
 - <s>add time navigation on web interface</s> (done 0.1.2)
 - test with slack adapter
 
