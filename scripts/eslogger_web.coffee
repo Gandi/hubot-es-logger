@@ -36,25 +36,6 @@ module.exports = (robot) ->
       res.setHeader 'content-type', 'text/plain'
       res.status(404).end 'Unkown room.'
 
-
-  robot.router.get "/#{robot.name}/logs/:room/:day", (req, res) ->
-    room = req.params.room
-    day = req.params.day.replace(/[^\d]/g, '')
-    if day < 0
-      res.setHeader 'content-type', 'text/html'
-      res.status(404).end "#{req.params.day} cannot be understood as a number."
-    else
-      if room and '#' + room in eslogger.logRooms
-        room = '#' + room
-        start = moment.utc().subtract(day, 'days').hour(0).minutes(0).seconds(0)
-        stop = moment.utc().subtract(day, 'days').hour(23).minutes(59).seconds(59)
-        eslogger.getLogs room, start, stop, (json_body) ->
-          res.setHeader 'content-type', 'text/html'
-          res.end eslogger.logContent(room, json_body, start, stop)
-      else
-        res.setHeader 'content-type', 'text/plain'
-        res.status(404).end 'Unkown room.'
-
   robot.router.get "/#{robot.name}/logs/:room/:year/:month/:day", (req, res) ->
     room = req.params.room
     day = moment().utc().year(req.params.year).month(req.params.month - 1).date(req.params.day)
@@ -65,8 +46,8 @@ module.exports = (robot) ->
     else
       if room and '#' + room in eslogger.logRooms
         room = '#' + room
-        start = day.hour(0).minutes(0).seconds(0)
-        stop = day.hour(23).minutes(59).seconds(59)
+        start = moment(day).hour(0).minutes(0).seconds(0)
+        stop = moment(day).hour(23).minutes(59).seconds(59)
         eslogger.getLogs room, start, stop, (json_body) ->
           res.setHeader 'content-type', 'text/html'
           res.end eslogger.logContent(room, json_body, start, stop)
