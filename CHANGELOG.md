@@ -1,6 +1,10 @@
 Hubot-es-logger Changelog
 ==========================
 
+### 0.2.1 - 2016-11-15
+- add an anchor link to search results
+- fix display of channel name in search results
+
 ### 0.2.0 - 2016-11-15
 - add a search field
 
