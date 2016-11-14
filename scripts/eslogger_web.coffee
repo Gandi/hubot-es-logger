@@ -31,10 +31,18 @@ module.exports = (robot) ->
       stop = moment.utc()
       eslogger.getLogs room, start, stop, (json_body) ->
         res.setHeader 'content-type', 'text/html'
-        res.end eslogger.logContent(room, json_body, start, stop)
+        res.end eslogger.showContent(room, json_body, start, stop)
     else
       res.setHeader 'content-type', 'text/plain'
       res.status(404).end 'Unkown room.'
+
+
+  robot.router.post "/#{robot.name}/logs/:room", (req, res) ->
+    room = req.params.room
+    search = req.body.search
+    eslogger.getAllTerms room, search, (json_body) ->
+      res.setHeader 'content-type', 'text/html'
+      res.end eslogger.showSearch(room, json_body, search)
 
   robot.router.get "/#{robot.name}/logs/:room/:year/:month/:day", (req, res) ->
     room = req.params.room
@@ -50,7 +58,7 @@ module.exports = (robot) ->
         stop = moment(day).hour(23).minutes(59).seconds(59)
         eslogger.getLogs room, start, stop, (json_body) ->
           res.setHeader 'content-type', 'text/html'
-          res.end eslogger.logContent(room, json_body, start, stop)
+          res.end eslogger.showContent(room, json_body, start, stop)
       else
         res.setHeader 'content-type', 'text/plain'
         res.status(404).end 'Unkown room.'

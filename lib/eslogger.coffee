@@ -203,6 +203,36 @@ class ESLogger
     @searchAllES json, (body) ->
       cb body.hits.hits
 
+  getAllTerms: (room, term, cb) ->
+    query = {
+      query: {
+        bool: {
+          must: [
+            {
+              match_phrase: {
+                message: term
+              }
+            },
+            {
+              match_phrase: {
+                room: room
+              }
+            }
+          ]
+        }
+      },
+      sort: {
+        '@timestamp': {
+          order: 'desc'
+        }
+      },
+      size: 100
+    }
+    json = JSON.stringify(query)
+    @searchAllES json, (body) ->
+      cb body.hits.hits
+
+
   getLinesPerDay: (room) ->
     query = {
       query: {
@@ -229,7 +259,7 @@ class ESLogger
       url = '/' + @logIndexName + '-*/_search'
     @robot.http(@logESUrl)
       .path(url)
-      .get(json) (err, res, body) ->
+      .get(json) (err, res, body) =>
         switch res.statusCode
           when 200 then json_body = JSON.parse(body)
           else
@@ -242,7 +272,7 @@ class ESLogger
   searchES: (index, json, cb) ->
     @robot.http(@logESUrl)
       .path(index + '/_search')
-      .post(json) (err, res, body) ->
+      .post(json) (err, res, body) =>
         switch res.statusCode
           when 200 then json_body = JSON.parse(body)
           else
@@ -252,7 +282,7 @@ class ESLogger
             json_body = null
         cb json_body
 
-  logContent: (room, lines, start, stop) ->
+  showContent: (room, lines, start, stop) ->
     time = moment().utc().format('HH:mm')
     start_date = start.format('MMM, ddd Do')
     stop_date = stop.format('HH:mm')
@@ -267,8 +297,12 @@ class ESLogger
     content += """
           <div>
             #{start_date} until #{stop_date} - Times are UTC (now is #{time} UTC)
-            #{nav}
-            </div>
+            #{nav} -
+            <form method="POST" action="#{@getLogURL room}">
+            <input type="text" name="search" size="16" />
+            <input type="submit" name="submit" value="Search" />
+            </form>
+          </div>
           <br>
           <div class="commands">
         """
@@ -284,6 +318,36 @@ class ESLogger
     content += @foot_html()
     content
 
+  showSearch: (room, lines, term) ->
+    time = moment().utc().format('HH:mm')
+    content = @html_head(room)
+    content += """
+          <div>
+            Search on <b>#{term}</b> - Times are UTC (now is #{time} UTC) -
+            <form method="POST" action="#{@getLogURL room}">
+            <input type="text" name="search" size="16" value="#{term.replace(/"/,"'")}" />
+            <input type="submit" name="submit" value="Search" />
+            </form>
+          </div>
+          <br>
+          <div class="commands search">
+        """
+    for line in lines
+      day = moment(line._source['@timestamp']).utc().format('YYYY/MM/DD')
+      time = moment(line._source['@timestamp']).utc().format('HH:mm:ss')
+      if line._source.nick? and line._source.nick isnt ''
+        content += "<p><a href=\"#{@getLogURL room}/#{day}\">#{day}</a> "
+        content += " #{time} <span>#{escape line._source.nick}</span>: "
+        content += "#{@escape line._source.message}</p>"
+      else
+        content += "<p><a href=\"#{@getLogURL room}/#{day}\">#{day}</a> "
+        content += "#{time} <span>&nbsp;</span>: "
+        content += "<i>#{@escape line._source.message}</i></p>"
+    content += '</div>'
+    content += @foot_html()
+    content
+
+
   html_head: (room) ->
     """
     <html>
@@ -291,48 +355,18 @@ class ESLogger
       <meta charset="utf-8" />
       <title>#{@title room}</title>
       <style type="text/css">
-        body {
-          background: #d3d6d9;
-          color: #555;
-          text-shadow: 0 1px 1px rgba(255, 255, 255, .5);
-          font-family: sans serif;
-        }
-        h1 {
-          margin: 8px 0;
-          padding: 0;
-        }
-        p {
-          font-family: monospace;
-          border-bottom: 1px solid #eee;
-          padding: 2px 0;
-          margin: 0;
-          color: #111;
-        }
-        p span {
-          width: 120px;
-          display: inline-block;
-          text-align: right;
-          font-weight: bold;
-        }
-        p > i {
-          color: #666;
-        }
-        p:hover {
-          color: #000;
-          background-color: #fff;
-        }
-        a {
-          text-decoration: none;
-          color: #249;
-        }
-        a:hover {
-          background-color: #ee9;
-        }
-        .foot {
-          padding: 20px 10px;
-          margin-top: 30px;
-          background-color: #a3a6a9;
-        }
+        body    { background: #d3d6d9; color: #555; text-shadow: 0 1px 1px rgba(255, 255, 255, .5); font-family: sans serif; }
+        h1      { margin: 8px 0; padding: 0; }
+        p       { font-family: monospace; border-bottom: 1px solid #eee; padding: 2px 0; margin: 0; color: #111; }
+        p span  { width: 120px; display: inline-block; text-align: right; font-weight: bold; }
+        .search p span  { width: 200px; display: inline-block; text-align: right; font-weight: bold; }
+        p > i   { color: #666; }
+        p:hover { color: #000; background-color: #fff; }
+        a       { text-decoration: none; color: #249; }
+        a:hover { background-color: #ee9; }
+        .foot   { padding: 20px 10px; margin-top: 30px; background-color: #a3a6a9; }
+        form    { display: inline-block; }
+        input   { padding: 1px 5px; }
       </style>
       </head>
       <body>
