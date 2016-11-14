@@ -258,8 +258,8 @@ class ESLogger
     stop_date = stop.format('HH:mm')
     daybefore = start.subtract(1, 'days')
     dayafter = start.add(1, 'days')
-    urlbefore = "#{@getLogURL room}/#{daybefore.year()}/#{daybefore.month()}/#{daybefore.day()}"
-    urlafter = "#{@getLogURL room}/#{dayafter.year()}/#{dayafter.month()}/#{dayafter.day()}"
+    urlbefore = "#{@getLogURL room}/#{daybefore.year()}/#{daybefore.month() + 1}/#{daybefore.date()}"
+    urlafter = "#{@getLogURL room}/#{dayafter.year()}/#{dayafter.month() + 1}/#{dayafter.date()}"
     nav = " - <a href=\"#{urlbefore}\">Day before</a>"
     if not start.isSame(moment().utc(), 'day')
       nav += " - <a href=\"#{urlafter}\">Day after</a>"
