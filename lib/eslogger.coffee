@@ -256,8 +256,8 @@ class ESLogger
     time = moment().utc().format('HH:mm')
     start_date = start.format('MMM, ddd Do')
     stop_date = stop.format('HH:mm')
-    daybefore = start.subtract(1, 'days')
-    dayafter = start.add(1, 'days')
+    daybefore = moment(start).subtract(1, 'days')
+    dayafter = moment(start).add(1, 'days')
     urlbefore = "#{@getLogURL room}/#{daybefore.year()}/#{daybefore.month() + 1}/#{daybefore.date()}"
     urlafter = "#{@getLogURL room}/#{dayafter.year()}/#{dayafter.month() + 1}/#{dayafter.date()}"
     nav = " - <a href=\"#{urlbefore}\">Day before</a>"
