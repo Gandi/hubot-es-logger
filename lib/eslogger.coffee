@@ -323,7 +323,7 @@ class ESLogger
     content = @html_head(room)
     content += """
           <div>
-            Search on <b>#{term}</b> - Times are UTC (now is #{time} UTC) -
+            Search on <b>#{@escape term}</b> - Times are UTC (now is #{time} UTC) -
             <form method="POST" action="#{@getLogURL room}">
             <input type="text" name="search" size="16" value="#{term.replace(/"/,"'")}" />
             <input type="submit" name="submit" value="Search" />
