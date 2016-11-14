@@ -254,11 +254,18 @@ class ESLogger
 
   logContent: (room, lines, start, stop) ->
     time = moment().utc().format('HH:mm')
-    start_date = start.format('MMM, ddd Do HH:mm')
-    stop_date = stop.format('MMM, ddd Do HH:mm')
+    start_date = start.format('MMM, ddd Do')
+    stop_date = stop.format('HH:mm')
+    diffday = moment().utc().diff(stop, 'days')
     content = @html_head(room)
+    nav = "<a href=\"/#{@robot.name}/logs/#{room}/#{diffday - 1}\">Day before</a>"
+    if diffdays isnt 0
+      nav += "<a href=\"/#{@robot.name}/logs/#{room}/#{diffday + 1}\">Day after</a>"
     content += """
-          <div>from #{start_date} to #{stop_date} - Times are UTC (now is #{time} UTC)</div>
+          <div>
+            #{start_date} until #{stop_date} - Times are UTC (now is #{time} UTC)
+            #{nav}
+            </div>
           <br>
           <div class="commands">
         """
