@@ -256,7 +256,7 @@ class ESLogger
     time = moment().utc().format('HH:mm')
     start_date = start.format('MMM, ddd Do')
     stop_date = stop.format('HH:mm')
-    diffdays = moment().utc().diff(stop, 'days')
+    diffdays = moment().utc().diff(start, 'days')
     content = @html_head(room)
     nav = " - <a href=\"#{@getLogURL room}/#{diffdays + 1}\">Day before</a>"
     if diffdays isnt 0
