@@ -258,9 +258,9 @@ class ESLogger
     stop_date = stop.format('HH:mm')
     diffdays = moment().utc().diff(stop, 'days')
     content = @html_head(room)
-    nav = "<a href=\"/#{@robot.name}/logs/#{room}/#{diffdays - 1}\">Day before</a>"
+    nav = " - <a href=\"#{getLogURL room}/#{- (diffdays + 1)}\">Day before</a>"
     if diffdays isnt 0
-      nav += "<a href=\"/#{@robot.name}/logs/#{room}/#{diffdays + 1}\">Day after</a>"
+      nav += " - <a href=\"#{getLogURL room}/#{diffdays + 1}\">Day after</a>"
     content += """
           <div>
             #{start_date} until #{stop_date} - Times are UTC (now is #{time} UTC)
