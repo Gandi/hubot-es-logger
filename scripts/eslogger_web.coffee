@@ -27,9 +27,8 @@ module.exports = (robot) ->
     room = req.params.room
     if room and '#' + room in eslogger.logRooms
       room = '#' + room
-      daynow = moment.utc()
-      start = daynow.hour(0).minutes(0).seconds(0)
-      stop = daynow
+      start = moment.utc().hour(0).minutes(0).seconds(0)
+      stop = moment.utc()
       eslogger.getLogs room, start, stop, (json_body) ->
         res.setHeader 'content-type', 'text/html'
         res.end eslogger.logContent(room, json_body, start, stop)
@@ -47,9 +46,8 @@ module.exports = (robot) ->
     else
       if room and '#' + room in eslogger.logRooms
         room = '#' + room
-        daynow = moment.utc().subtract(day, 'days')
-        start = daynow.hour(0).minutes(0).seconds(0)
-        stop = daynow.hour(23).minutes(59).seconds(59)
+        start = moment.utc().subtract(day, 'days').hour(0).minutes(0).seconds(0)
+        stop = moment.utc().subtract(day, 'days').hour(23).minutes(59).seconds(59)
         eslogger.getLogs room, start, stop, (json_body) ->
           res.setHeader 'content-type', 'text/html'
           res.end eslogger.logContent(room, json_body, start, stop)
