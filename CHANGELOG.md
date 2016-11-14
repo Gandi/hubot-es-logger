@@ -2,6 +2,7 @@ Hubot-es-logger Changelog
 ==========================
 
 ### 0.1.4 - wip
+- better regexp for links on the web pages
 - make multiple urls on line all htmlized
 
 ### 0.1.3 - 2016-11-14
