@@ -360,7 +360,7 @@ class ESLogger
     return message.replace(/&/g, '&amp;')
       .replace(/</g, '&lt;')
       .replace(/>/g, '&gt;')
-      .replace(/(https?:\/\/[^ ]*)/g, ($1) ->
+      .replace(/(https?:\/\/[^ \]\)]*)/g, ($1) ->
         "<a href=\"#{$1}\">#{$1}</a>"
         )
 
