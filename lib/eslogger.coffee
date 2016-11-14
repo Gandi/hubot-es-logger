@@ -308,11 +308,12 @@ class ESLogger
         """
     for line in lines
       time = moment(line._source['@timestamp']).utc().format('HH:mm:ss')
+      content += "<p><a name=\"#{line._source['@timestamp']}\"></a>"
       if line._source.nick? and line._source.nick isnt ''
-        content += "<p>#{time} <span>#{escape line._source.nick}</span>: "
+        content += " #{time} <span>#{escape line._source.nick}</span>: "
         content += "#{@escape line._source.message}</p>"
       else
-        content += "<p>#{time} <span>&nbsp;</span>: "
+        content += " #{time} <span>&nbsp;</span>: "
         content += "<i>#{@escape line._source.message}</i></p>"
     content += '</div>'
     content += @foot_html()
@@ -335,13 +336,12 @@ class ESLogger
     for line in lines
       day = moment(line._source['@timestamp']).utc().format('YYYY/MM/DD')
       time = moment(line._source['@timestamp']).utc().format('HH:mm:ss')
+      content += "<p><a href=\"#{@getLogURL room}/#{day}##{line._source['@timestamp']}\">#{day}</a>"
       if line._source.nick? and line._source.nick isnt ''
-        content += "<p><a href=\"#{@getLogURL room}/#{day}\">#{day}</a> "
         content += " #{time} <span>#{escape line._source.nick}</span>: "
         content += "#{@escape line._source.message}</p>"
       else
-        content += "<p><a href=\"#{@getLogURL room}/#{day}\">#{day}</a> "
-        content += "#{time} <span>&nbsp;</span>: "
+        content += " #{time} <span>&nbsp;</span>: "
         content += "<i>#{@escape line._source.message}</i></p>"
     content += '</div>'
     content += @foot_html()

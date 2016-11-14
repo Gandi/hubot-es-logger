@@ -41,6 +41,7 @@ module.exports = (robot) ->
     room = req.params.room
     search = req.body.search
     if room and '#' + room in eslogger.logRooms
+      room = '#' + room
       eslogger.getAllTerms room, search, (json_body) ->
         res.setHeader 'content-type', 'text/html'
         res.end eslogger.showSearch(room, json_body, search)
