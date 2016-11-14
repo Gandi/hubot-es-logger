@@ -40,9 +40,13 @@ module.exports = (robot) ->
   robot.router.post "/#{robot.name}/logs/:room", (req, res) ->
     room = req.params.room
     search = req.body.search
-    eslogger.getAllTerms room, search, (json_body) ->
-      res.setHeader 'content-type', 'text/html'
-      res.end eslogger.showSearch(room, json_body, search)
+    if room and '#' + room in eslogger.logRooms
+      eslogger.getAllTerms room, search, (json_body) ->
+        res.setHeader 'content-type', 'text/html'
+        res.end eslogger.showSearch(room, json_body, search)
+    else
+      res.setHeader 'content-type', 'text/plain'
+      res.status(404).end 'Unkown room.'
 
   robot.router.get "/#{robot.name}/logs/:room/:year/:month/:day", (req, res) ->
     room = req.params.room

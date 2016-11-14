@@ -151,7 +151,7 @@ class ESLogger
           order: 'asc'
         }
       },
-      size: 1000
+      size: 100
     }
     json = JSON.stringify(query)
     # console.log json
@@ -355,11 +355,14 @@ class ESLogger
       <meta charset="utf-8" />
       <title>#{@title room}</title>
       <style type="text/css">
-        body    { background: #d3d6d9; color: #555; text-shadow: 0 1px 1px rgba(255, 255, 255, .5); font-family: sans serif; }
+        body    { background: #d3d6d9; color: #555; text-shadow: 0 1px 1px rgba(255, 255, 255, .5); 
+                  font-family: sans serif; }
         h1      { margin: 8px 0; padding: 0; }
-        p       { font-family: monospace; border-bottom: 1px solid #eee; padding: 2px 0; margin: 0; color: #111; }
+        p       { font-family: monospace; border-bottom: 1px solid #eee; padding: 2px 0; margin: 0; 
+                  color: #111; }
         p span  { width: 120px; display: inline-block; text-align: right; font-weight: bold; }
-        .search p span  { width: 160px; display: inline-block; text-align: right; font-weight: bold; }
+        .search p span  { 
+                  width: 160px; display: inline-block; text-align: right; font-weight: bold; }
         p > i   { color: #666; }
         p:hover { color: #000; background-color: #fff; }
         a       { text-decoration: none; color: #249; }

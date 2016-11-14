@@ -1,7 +1,7 @@
 Hubot-es-logger Changelog
 ==========================
 
-### 0.2.0 - wip
+### 0.2.0 - 2016-11-15
 - add a search field
 
 ### 0.1.4 - 2016-11-14
