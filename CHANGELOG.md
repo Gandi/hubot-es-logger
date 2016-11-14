@@ -1,7 +1,8 @@
 Hubot-es-logger Changelog
 ==========================
 
-### 0.1.3 - wip
+### 0.1.3 - 2016-11-14
+- change navigation to use dates rather than index
 - add an url route for displaying a specific day
 
 ### 0.1.2 - 2016-11-14
