@@ -67,6 +67,7 @@ ToDo
 - <s>add search features on web interface</s> (done in 0.2.0)
 - <s>add time navigation on web interface</s> (done 0.1.2)
 - test with slack adapter
+- setup a backend pagination system in case of huge quantity of logs per day
 
 Contribute
 -------------
