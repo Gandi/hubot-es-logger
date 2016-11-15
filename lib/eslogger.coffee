@@ -316,7 +316,7 @@ class ESLogger
         content += " #{time} <span>&nbsp;</span>: "
         content += "<i>#{@escape line._source.message}</i></p>"
     content += '</div>'
-    content += @foot_html()
+    content += @foot_html(room)
     content
 
   showSearch: (room, lines, term) ->
@@ -344,7 +344,7 @@ class ESLogger
         content += " #{time} <span>&nbsp;</span>: "
         content += "<i>#{@escape line._source.message}</i></p>"
     content += '</div>'
-    content += @foot_html()
+    content += @foot_html(room)
     content
 
 
@@ -386,9 +386,11 @@ class ESLogger
     else
       "Irc Logs#{room}"
 
-  foot_html: ->
+  foot_html: (room) ->
     if @logKibanaUrlName?
-      url = @logKibanaUrlName + '/#/dashboard/file/' + @logKibanaTemplateName + '.json?room=' + room
+      url = @logKibanaUrlName + '/#/dashboard/file/' + @logKibanaTemplateName + '.json'
+      if room?
+        url += '?room=' + room
       "<div class=\"foot\">More Power on <a href=\"#{url}\">#{url}</a></div></body></html>"
     else
       '</body></html>'

@@ -19,7 +19,7 @@ module.exports = (robot) ->
     content = eslogger.html_head(null)
     for room in eslogger.logRooms.sort()
       content += "<p><span></span><a href=\"/#{robot.name}/logs/#{room.slice(1)}\">#{room}</a></p>"
-    content += eslogger.foot_html()
+    content += eslogger.foot_html(null)
     res.setHeader 'content-type', 'text/html'
     res.end content
 
