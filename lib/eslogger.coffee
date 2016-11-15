@@ -150,8 +150,7 @@ class ESLogger
         '@timestamp': {
           order: 'asc'
         }
-      },
-      size: 100
+      }
     }
     json = JSON.stringify(query)
     # console.log json
