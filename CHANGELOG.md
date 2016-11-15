@@ -1,6 +1,9 @@
 Hubot-es-logger Changelog
 ==========================
 
+### 0.2.3 - 2016-11-15
+- fix footer when kibana url is set
+
 ### 0.2.2 - 2016-11-15
 - raise the limit of number of line to 10k, but it will need better way
 
