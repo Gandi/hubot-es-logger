@@ -1,7 +1,7 @@
 {
   "name": "hubot-es-logger",
   "description": "A plugin for Hubot to log channels activity on ElasticSearch, and serve logs via web.",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "author": {
     "name": "mose",
     "email": "mose@gandi.net",

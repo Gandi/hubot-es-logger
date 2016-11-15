@@ -1,6 +1,9 @@
 Hubot-es-logger Changelog
 ==========================
 
+### 0.2.2 - 2016-11-15
+- raise the limit of number of line to 10k, but it will need better way
+
 ### 0.2.1 - 2016-11-15
 - add an anchor link to search results
 - fix display of channel name in search results
