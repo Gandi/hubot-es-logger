@@ -288,8 +288,9 @@ class ESLogger
     stop_date = stop.format('HH:mm')
     daybefore = moment(start).subtract(1, 'days')
     dayafter = moment(start).add(1, 'days')
-    urlbefore = "#{@getLogURL room}/#{daybefore.year()}/#{daybefore.month() + 1}/#{daybefore.date()}"
-    urlafter = "#{@getLogURL room}/#{dayafter.year()}/#{dayafter.month() + 1}/#{dayafter.date()}"
+    urlroom = @getLogURL room
+    urlbefore = "#{urlroom}/#{daybefore.year()}/#{daybefore.month() + 1}/#{daybefore.date()}"
+    urlafter = "#{urlroom}/#{dayafter.year()}/#{dayafter.month() + 1}/#{dayafter.date()}"
     nav = " - <a href=\"#{urlbefore}\">Day before</a>"
     if not start.isSame(moment().utc(), 'day')
       nav += " - <a href=\"#{urlafter}\">Day after</a>"
@@ -298,7 +299,7 @@ class ESLogger
           <div>
             #{start_date} until #{stop_date} - Times are UTC (now is #{time} UTC)
             #{nav} -
-            <form method="POST" action="#{@getLogURL room}">
+            <form method="POST" action="#{urlbefore}">
             <input type="text" name="search" size="16" />
             <input type="submit" name="submit" value="Search" />
             </form>
@@ -326,7 +327,7 @@ class ESLogger
           <div>
             Search on <b>#{@escape term}</b> - Times are UTC (now is #{time} UTC) -
             <form method="POST" action="#{@getLogURL room}">
-            <input type="text" name="search" size="16" value="#{term.replace(/"/,"'")}" />
+            <input type="text" name="search" size="16" value="#{term.replace(/"/, "'")}" />
             <input type="submit" name="submit" value="Search" />
             </form>
           </div>
@@ -355,13 +356,13 @@ class ESLogger
       <meta charset="utf-8" />
       <title>#{@title room}</title>
       <style type="text/css">
-        body    { background: #d3d6d9; color: #555; text-shadow: 0 1px 1px rgba(255, 255, 255, .5); 
+        body    { background: #d3d6d9; color: #555; text-shadow: 0 1px 1px rgba(255, 255, 255, .5);
                   font-family: sans serif; }
         h1      { margin: 8px 0; padding: 0; }
-        p       { font-family: monospace; border-bottom: 1px solid #eee; padding: 2px 0; margin: 0; 
+        p       { font-family: monospace; border-bottom: 1px solid #eee; padding: 2px 0; margin: 0;
                   color: #111; }
         p span  { width: 120px; display: inline-block; text-align: right; font-weight: bold; }
-        .search p span  { 
+        .search p span  {
                   width: 160px; display: inline-block; text-align: right; font-weight: bold; }
         p > i   { color: #666; }
         p:hover { color: #000; background-color: #fff; }
