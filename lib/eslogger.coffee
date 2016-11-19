@@ -263,9 +263,7 @@ class ESLogger
         switch res.statusCode
           when 200 then json_body = JSON.parse(body)
           else
-            @robot.logger.warning 'searchAllES / res.statusCode != 200'
-            console.log res.statusCode
-            console.log body
+            robot.logger.error "(searchAllES #{res.statusCode}) GET url: #{url} / query: #{query}"
             json_body = null
         cb json_body
 
@@ -276,9 +274,7 @@ class ESLogger
         switch res.statusCode
           when 200 then json_body = JSON.parse(body)
           else
-            @robot.logger.warning 'searchES / res.statusCode != 200'
-            console.log res.statusCode
-            console.log body
+            robot.logger.error "(searchES #{res.statusCode}) GET url: #{url} / query: #{query}"
             json_body = null
         cb json_body
 
