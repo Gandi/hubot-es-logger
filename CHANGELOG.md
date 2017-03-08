@@ -1,6 +1,9 @@
 Hubot-es-logger Changelog
 ==========================
 
+### 0.2.4 - 2017-03-08
+- avoid error if env vars are not defined
+
 ### 0.2.3 - 2016-11-15
 - fix footer when kibana url is set
 
