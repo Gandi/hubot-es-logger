@@ -7,7 +7,8 @@ class ESLogger
     @logEnabled = process.env.ES_LOG_ENABLED
     @logAnnounce = process.env.ES_LOG_ANNOUNCE
     @logESUrl = process.env.ES_LOG_ES_URL
-    @logRooms = process.env.ES_LOG_ROOMS.split(',')
+    if process.env.ES_LOG_ROOMS?
+      @logRooms = process.env.ES_LOG_ROOMS.split(',')
     @logIndexName = process.env.ES_LOG_INDEX_NAME or 'irclogs'
     @logSingleIndex = process.env.ES_LOG_SINGLE_INDEX
     @logKibanaUrlName = process.env.ES_LOG_KIBANA_URL
